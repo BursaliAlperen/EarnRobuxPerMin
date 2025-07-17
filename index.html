@@ -1,106 +1,152 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Email ile Giriş</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firebase Email ile Giriş</title>
+
+  <!-- Firebase CDN -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCIvtxUQxK9dVMG51xFkc_QyieKSn55DdM",
+      authDomain: "earnrobuxpermin.firebaseapp.com",
+      databaseURL: "https://earnrobuxpermin-default-rtdb.firebaseio.com",
+      projectId: "earnrobuxpermin",
+      storageBucket: "earnrobuxpermin.appspot.com",
+      messagingSenderId: "478198336251",
+      appId: "1:478198336251:web:74ac881afe8a196bbcbe5e",
+      measurementId: "G-Y27VJZMQR2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.register = (email, password) => {
+      return createUserWithEmailAndPassword(auth, email, password);
+    };
+
+    window.login = (email, password) => {
+      return signInWithEmailAndPassword(auth, email, password);
+    };
+
+    window.logout = () => {
+      return signOut(auth);
+    };
+
+    window.onUserChange = (callback) => {
+      onAuthStateChanged(auth, callback);
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #16213e;
+      padding: 30px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0, 162, 255, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00a2ff;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background: #1a1a2e;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #00a2ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #007ac1;
+    }
+
+    #status {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
 </head>
+
 <body>
-  <h2>Firebase Email ile Giriş</h2>
+  <div class="container">
+    <h2>Email ile Giriş</h2>
+    <input type="email" id="email" placeholder="E-posta" />
+    <input type="password" id="password" placeholder="Şifre" />
 
-  <input type="email" id="email" placeholder="E-posta">
-  <input type="password" id="password" placeholder="Şifre">
-  
-  <button id="registerBtn">Kayıt Ol</button>
-  <button id="loginBtn">Giriş Yap</button>
-  <button id="logoutBtn">Çıkış Yap</button>
+    <button id="registerBtn">Kayıt Ol</button>
+    <button id="loginBtn">Giriş Yap</button>
+    <button id="logoutBtn">Çıkış Yap</button>
 
-  <p id="status"></p>
+    <p id="status">Durum: Kimse giriş yapmadı</p>
+  </div>
 
   <script type="module">
-    import { register, login, logout, onUserChange } from "./firebase.js";
-
     const emailEl = document.getElementById("email");
     const passwordEl = document.getElementById("password");
     const statusEl = document.getElementById("status");
 
     document.getElementById("registerBtn").addEventListener("click", () => {
       register(emailEl.value, passwordEl.value)
-        .then(() => alert("Kayıt başarılı"))
+        .then(() => alert("Kayıt başarılı!"))
         .catch(err => alert("Hata: " + err.message));
     });
 
     document.getElementById("loginBtn").addEventListener("click", () => {
       login(emailEl.value, passwordEl.value)
-        .then(() => alert("Giriş başarılı"))
+        .then(() => alert("Giriş başarılı!"))
         .catch(err => alert("Hata: " + err.message));
     });
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
-      logout();
+      logout().then(() => alert("Çıkış yapıldı!"));
     });
 
     onUserChange(user => {
       if (user) {
-        statusEl.innerText = "Giriş Yapan: " + user.email;
+        statusEl.innerText = "Durum: Giriş Yapan → " + user.email;
       } else {
-        statusEl.innerText = "Kimse giriş yapmadı";
+        statusEl.innerText = "Durum: Kimse giriş yapmadı";
       }
     });
   </script>
 </body>
 </html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robux Kazan</title>
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/websim/dist/websim-socket.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDKs -->
-    <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-    
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyCIvtxUQxK9dVMG51xFkc_QyieKSn55DdM",
-        authDomain: "earnrobuxpermin.firebaseapp.com",
-        databaseURL: "https://earnrobuxpermin-default-rtdb.firebaseio.com",
-        projectId: "earnrobuxpermin",
-        storageBucket: "earnrobuxpermin.appspot.com",
-        messagingSenderId: "478198336251",
-        appId: "1:478198336251:web:74ac881afe8a196bbcbe5e",
-        measurementId: "G-Y27VJZMQR2"
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      window.firebaseAuth = getAuth(app);
-      window.firebaseDb = getFirestore(app);
-    </script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-        :root {
-            --primary-color: #00a2ff;
-            --secondary-color: #007ac1;
-            --background-color: #1a1a2e;
-            --surface-color: #16213e;
-            --text-color: #e0e0e0;
-            --header-color: #0f3460;
-            --success-color: #4caf50;
-            --error-color: #f44336;
-        }
-
-        body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
