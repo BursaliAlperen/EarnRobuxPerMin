@@ -1,3 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Email ile Giriş</title>
+</head>
+<body>
+  <h2>Firebase Email ile Giriş</h2>
+
+  <input type="email" id="email" placeholder="E-posta">
+  <input type="password" id="password" placeholder="Şifre">
+  
+  <button id="registerBtn">Kayıt Ol</button>
+  <button id="loginBtn">Giriş Yap</button>
+  <button id="logoutBtn">Çıkış Yap</button>
+
+  <p id="status"></p>
+
+  <script type="module">
+    import { register, login, logout, onUserChange } from "./firebase.js";
+
+    const emailEl = document.getElementById("email");
+    const passwordEl = document.getElementById("password");
+    const statusEl = document.getElementById("status");
+
+    document.getElementById("registerBtn").addEventListener("click", () => {
+      register(emailEl.value, passwordEl.value)
+        .then(() => alert("Kayıt başarılı"))
+        .catch(err => alert("Hata: " + err.message));
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      login(emailEl.value, passwordEl.value)
+        .then(() => alert("Giriş başarılı"))
+        .catch(err => alert("Hata: " + err.message));
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      logout();
+    });
+
+    onUserChange(user => {
+      if (user) {
+        statusEl.innerText = "Giriş Yapan: " + user.email;
+      } else {
+        statusEl.innerText = "Kimse giriş yapmadı";
+      }
+    });
+  </script>
+</body>
+</html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
